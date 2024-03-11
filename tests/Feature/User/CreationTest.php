@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Models\Workstation;
 
 it("can create a user with valid data", function () {
     $data = [
@@ -49,5 +50,20 @@ it("fails user creation by empty name", function () {
     expect(fn() => User::create([
         'name'       => '',
     ]))->toThrow(\Illuminate\Database\QueryException::class);
+});
+
+it("can add multiple workstations to a user", function () {
+    $user = User::create([
+        'name'       => 'Example User',
+        'email'      => 'user@example.com',
+    ]);
+
+    $workstations = Workstation::factory()->count(5)->create([
+        'user_id' => $user->id
+    ]);
+
+    $retrievedUser = User::find($user->id);
+    $retrievedWorkstations = $retrievedUser->workstations;
+    expect($retrievedWorkstations->toArray())->toEqual($workstations->toArray());
 });
 
