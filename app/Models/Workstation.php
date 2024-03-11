@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\WorkstationCreating;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,6 +19,11 @@ class Workstation extends Model
 
     protected $casts = [
         'properties' => 'array'
+    ];
+
+    protected $dispatchesEvents = [
+        'creating' => WorkstationCreating::class,
+        'updating' => WorkstationCreating::class,
     ];
 
     public function user()
