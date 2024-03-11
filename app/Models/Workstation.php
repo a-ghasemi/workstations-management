@@ -5,21 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+class Workstation extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'name',
-        'email',
+        'user_id',
+        'address_id',
         'properties',
     ];
 
     protected $casts = [
-        'properties' => 'array',
+        'properties' => 'array'
     ];
 
-    public function workstations() {
-        return $this->hasMany(Workstation::class);
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
