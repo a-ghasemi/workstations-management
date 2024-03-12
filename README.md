@@ -21,3 +21,8 @@
 2. using form to enter data
 3. lists should be filterable and sortable
 4. lists need to have pagination
+
+## Thinking Process
+I've logged my thinking process to have better understanding of the problem before starting to code.
+
+[ThinkingProcess.md](docs%2FThinkingProcess.md)
