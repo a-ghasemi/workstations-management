@@ -8,6 +8,7 @@
     <title>Workstation Management</title>
 </head>
 <body>
+@include('include.message')
 @include('include.topmenu')
 <h1>@yield('heading')</h1>
 @yield('content')
