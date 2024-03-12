@@ -23,6 +23,8 @@ class Component extends Model
         'properties' => 'array',
     ];
 
+    protected $with = ['type', 'category'];
+
     public function type(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(ComponentType::class);
