@@ -36,6 +36,11 @@ class Workstation extends Model
         return $this->hasMany(Component::class);
     }
 
+    public function address()
+    {
+        return $this->belongsTo(Address::class);
+    }
+
     public function attachComponent(Component $component): self
     {
         $category = $component->category;
