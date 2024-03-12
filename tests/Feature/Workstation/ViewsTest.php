@@ -5,7 +5,7 @@ use App\Models\Address;
 use App\Models\Component;
 use App\Models\User;
 
-beforeAll(function (){
+beforeEach(function (){
     User::factory()->count(10)->create();
     Address::factory()->count(10)->create();
     Workstation::factory()->count(10)->create()->each(function ($workstation) {

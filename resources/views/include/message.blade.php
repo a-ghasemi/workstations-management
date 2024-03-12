@@ -1,11 +1,11 @@
 @if(session('success'))
     <div>
-        {{ session('success') }}
+        {!! session('success') !!}
     </div>
 @endif
 
 @if(session('error'))
     <div>
-        {{ session('error') }}
+        {!! session('error') !!}
     </div>
 @endif

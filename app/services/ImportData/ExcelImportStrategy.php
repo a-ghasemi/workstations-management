@@ -9,6 +9,9 @@ use App\Models\ComponentCategory;
 use App\Models\ComponentType;
 use App\Models\User;
 use App\Models\Workstation;
+use App\services\ImportData\Validators\UserValidator;
+use App\services\ImportData\Validators\ValidationException;
+use App\services\ImportData\Validators\WorkstationValidator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -38,11 +41,23 @@ class ExcelImportStrategy implements IStrategy
         'component_keyboard_layout' => 6,
     ];
 
+    protected $validators;
+
+    public function __construct()
+    {
+        $this->validators = [
+            new WorkstationValidator(),
+            new UserValidator(),
+        ];
+    }
+
     public function importData($source): void
     {
         $raw_data = Excel::toCollection(new SimpleImport(), $source);
 
         $records = $this->extractData($raw_data);
+
+        $this->validateData($records);
 
         $this->updateDatabase($records);
     }
@@ -72,25 +87,7 @@ class ExcelImportStrategy implements IStrategy
                 ],
                 'components'  => [],
             ];
-
-            $col_index = count(self::HEADERS);
-            while ($col_index < count($row)) {
-                $component = [];
-                foreach (self::COMPONENT_HEADERS as $header => $offset) {
-                    $component[$header] = $row[$col_index + $offset] ?? null;
-                }
-                $col_index += count(self::COMPONENT_HEADERS);
-
-                if (!array_filter($component, function ($value) {
-                    return !is_null($value);
-                })) {
-                    continue;
-                }
-
-                $data['components'][] = $component;
-            }
-
-            return $data;
+            return $this->extractComponents($row, $data);
         });
     }
 
@@ -111,6 +108,9 @@ class ExcelImportStrategy implements IStrategy
                     'name'       => $record['workstation']['name'],
                     'user_id'    => $user?->id,
                     'address_id' => $address->id,
+                    'properties' => [
+                        'remark' => $record['workstation']['remark'],
+                    ],
                 ]);
 
                 foreach ($record['components'] as $component) {
@@ -142,5 +142,40 @@ class ExcelImportStrategy implements IStrategy
             }
         }
         DB::commit();
+    }
+
+    protected function extractComponents($row, array $data): array
+    {
+        $col_index = count(self::HEADERS);
+        while ($col_index < count($row)) {
+            $component = [];
+            foreach (self::COMPONENT_HEADERS as $header => $offset) {
+                $component[$header] = $row[$col_index + $offset] ?? null;
+            }
+            $col_index += count(self::COMPONENT_HEADERS);
+
+            if (!array_filter($component, function ($value) {
+                return !is_null($value);
+            })) {
+                continue;
+            }
+
+            $data['components'][] = $component;
+        }
+        return $data;
+    }
+
+    protected function validateData(Collection $records): void
+    {
+        $errors = [];
+
+        foreach ($this->validators as $validator) {
+            $validatorErrors = $validator->validate($records);
+            $errors = array_merge($errors, $validatorErrors);
+        }
+
+        if (!empty($errors)) {
+            throw new ValidationException($errors);
+        }
     }
 }

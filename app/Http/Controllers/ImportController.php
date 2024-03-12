@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Workstation;
 use App\services\ImportData\ExcelImportStrategy;
 use App\services\ImportData\ImportExecutor;
+use App\services\ImportData\Validators\ValidationException;
 use Illuminate\Http\Request;
-use Matrix\Exception;
 
 class ImportController extends Controller
 {
@@ -27,8 +26,8 @@ class ImportController extends Controller
             $importer = new ImportExecutor(new ExcelImportStrategy());
             $importer->execute($uploadedFile);
 
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Import failed: ' . $e->getMessage());
+        } catch (ValidationException $e) {
+            return redirect()->back()->with('error', nl2br($e->getErrorMessages()));
         }
 
         return redirect()->route('home')->with('success', 'Import successful!');
