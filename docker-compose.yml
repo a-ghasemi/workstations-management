@@ -24,19 +24,25 @@ services:
         depends_on:
             - mariadb
     mariadb:
-        image: 'mariadb:10'
+        image: bitnami/mariadb:latest
+        volumes:
+            - './sail-db:/bitnami/mariadb/data'
+        restart: always
         ports:
             - '${FORWARD_DB_PORT:-3306}:3306'
         environment:
-            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ROOT_HOST: '%'
-            MYSQL_DATABASE: '${DB_DATABASE}'
-            MYSQL_USER: '${DB_USERNAME}'
-            MYSQL_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-        volumes:
-            - 'sail-mariadb:/var/lib/mysql'
-            - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+            ALLOW_EMPTY_PASSWORD: 1
+            MARIADB_EXTRA_FLAGS: '--max-connect-errors=1000 --max_connections=155'
+            MARIADB_CHARACTER_SET: utf8
+            MARIADB_COLLATE: utf8_general_ci
+            MARIADB_ROOT_USER: root
+            MARIADB_ROOT_PASSWORD: 'password'
+            MARIADB_PORT_NUMBER: 3306
+            MARIADB_DATABASE: 'laravel'
+            MARIADB_USER: sail
+            MARIADB_PASSWORD: 'password'
+            MARIADB_ENABLE_SLOW_QUERY: 0
+            MARIADB_LONG_QUERY_TIME: 10.0
         networks:
             - sail
         healthcheck:
@@ -51,5 +57,5 @@ networks:
     sail:
         driver: bridge
 volumes:
-    sail-mariadb:
+    sail-mysql:
         driver: local
