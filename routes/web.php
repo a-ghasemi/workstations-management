@@ -7,3 +7,6 @@ Route::get('/', 'RouteController@home')->name('home');
 
 Route::get('import/excel', 'ImportController@create')->name('import.excel.create');
 Route::post('import/excel', 'ImportController@store')->name('import.excel.store');
+
+Route::resource('workstations', 'WorkstationController')->only(['show']);
+
