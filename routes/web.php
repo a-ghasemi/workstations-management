@@ -8,3 +8,5 @@ Route::post('import/excel', 'ImportController@store')->name('import.excel.store'
 Route::get('/', 'WorkstationController@index')->name('home');
 Route::resource('workstations', 'WorkstationController')->only(['show']);
 
+Route::resource('users', 'UserController')->only(['index']);
+
