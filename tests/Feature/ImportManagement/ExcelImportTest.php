@@ -3,6 +3,7 @@
 use App\Models\Workstation;
 use App\services\ImportData\ImportExecutor;
 use \App\services\ImportData\ExcelImportStrategy;
+use App\services\ImportData\Validators\ValidationException;
 use \Maatwebsite\Excel\Facades\Excel;
 use \App\Imports\SimpleImport;
 
@@ -27,4 +28,19 @@ it('can read excel file with header', function(){
 
     $workstation = Workstation::where('name', 'Flexplek 1');
     expect($workstation)->not->toBeEmpty();
+});
+
+it('fails when read excel file with validation issues', function(){
+    $testFilePath = \Pest\testDirectory(
+        str_replace('/',DIRECTORY_SEPARATOR,'Feature/ImportManagement/SampleData/sample_excel_02_fail.xlsx')
+    );
+
+    try{
+        $importer = new ImportExecutor(new ExcelImportStrategy());
+        $importer->execute($testFilePath);
+        expect()->fail();
+    }catch(ValidationException $e){
+        expect($e->getMessage())->toContain('Each workstation must have either a unique name or a user');
+    }
+
 });
