@@ -2,6 +2,7 @@
 
 @section('heading','Working Station Details')
 @section('content')
+    <h2>Name: {{ $workstation->name }}</h2>
     <h2>User</h2>
     @if($workstation->user)
     <table>
