@@ -18,9 +18,9 @@
                 <th scope="row">{{ $workstation->user->id }}</th>
                 <td>{{ $workstation->user->name }}</td>
                 <td>{{ $workstation->user->email }}</td>
-                <td>
-                    {{--                    <a href="{{ route('users.show', $item->id) }}">Details</a>--}}
-                </td>
+{{--                <td>--}}
+{{--                                        <a href="{{ route('users.show', $item->id) }}">Details</a>--}}
+{{--                </td>--}}
             </tr>
         </tbody>
     </table>
@@ -73,9 +73,9 @@
                     <td>{{ $item->category->name }}</td>
                     <td>{{ $item->make }}</td>
                     <td>{{ $item->model }}</td>
-                    <td>
-    {{--                    <a href="{{ route('components.show', $item->id) }}">Details</a>--}}
-                    </td>
+{{--                    <td>--}}
+{{--                        <a href="{{ route('components.show', $item->id) }}">Details</a>--}}
+{{--                    </td>--}}
                 </tr>
             @endforeach
         </tbody>
