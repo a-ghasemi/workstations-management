@@ -32,4 +32,15 @@ class ImportController extends Controller
 
         return redirect()->route('home')->with('success', 'Import successful!');
     }
+
+    public function download(int $id)
+    {
+        $file_path = match($id) {
+            1 => base_path('tests/Feature/ImportManagement/SampleData/sample_excel_01.xlsx'),
+            2 => base_path('tests/Feature/ImportManagement/SampleData/sample_excel_02_fail.xlsx'),
+            default => throw new \Exception('Invalid file id'),
+        };
+
+        return response()->download($file_path);
+    }
 }
