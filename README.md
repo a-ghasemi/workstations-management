@@ -23,7 +23,13 @@ This project is aimed to solve this problem in a open-source way, then every com
 * to visit the web page, in the browser, go to `http://localhost`
 
 ## Contributing
+### Companies
+All companies that want to use this project's idea are welcome to contribute with requesting their own use-cases.
+Just open an issue and I will add your use-cases to the tasks list base on their priority.
+### Development
 Everyone is welcome to contribute to this project. just open a pull request and I will review it quickly.
+
+
 
 ## Predictable future extends
 1. using different type of files to input data
